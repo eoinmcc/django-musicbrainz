@@ -142,7 +142,8 @@ class Artist(models.Model):
     end_date_day = models.SmallIntegerField(blank=True, null=True)
     type = models.ForeignKey(
         'ArtistType', db_column='type', blank=True, null=True)
-    area = models.ForeignKey(Area, db_column='area', blank=True, null=True)
+    area = models.ForeignKey(Area, db_column='area',
+        related_name='artist_area_set', blank=True, null=True)
     gender = models.ForeignKey(
         'Gender', db_column='gender', blank=True, null=True)
     comment = models.CharField(max_length=255)
@@ -614,9 +615,9 @@ class Editor(models.Model):
     deleted = models.BooleanField()
 
     artists_subscribed = models.ManyToManyField(
-        'Artist', through='EditorSubscribeArtist')
+        'Artist', related_name='editor_subscribed_set', through='EditorSubscribeArtist')
     artists_watched = models.ManyToManyField(
-        'Artist', through='EditorWatchArtist')
+        'Artist',related_name='editor_watched_set' through='EditorWatchArtist')
     artists_deleted = models.ManyToManyField(
         'ArtistDeletion', through='EditorSubscribeArtistDeleted')
     labels_deleted = models.ManyToManyField(
@@ -1984,7 +1985,8 @@ class Label(models.Model):
     label_code = models.IntegerField(blank=True, null=True)
     type = models.ForeignKey(
         'LabelType', db_column='type', blank=True, null=True)
-    area = models.ForeignKey(Area, db_column='area', blank=True, null=True)
+    area = models.ForeignKey(Area, db_column='area',
+        related_name='label_area_set', blank=True, null=True)
     comment = models.CharField(max_length=255)
     edits_pending = models.IntegerField()
     last_updated = models.DateTimeField(blank=True, null=True)
@@ -2383,7 +2385,8 @@ class Place(models.Model):
     type = models.ForeignKey(
         'PlaceType', db_column='type', blank=True, null=True)
     address = models.CharField(max_length=CHARACTER_VARYING_MAX_LENGTH)
-    area = models.ForeignKey(Area, db_column='area', blank=True, null=True)
+    area = models.ForeignKey(Area, db_column='area',
+        related_name='place_area_set', blank=True, null=True)
     coordinates = models.TextField(blank=True)
     comment = models.CharField(max_length=255)
     edits_pending = models.IntegerField()
@@ -2531,7 +2534,8 @@ class Recording(models.Model):
     places = models.ManyToManyField(
         'Place', through='LPlaceRecording')
     recording = models.ManyToManyField(
-        'Recording', through='LRecordingRecording')
+        'Recording', related_name='left_recording_set',
+        through='LRecordingRecording')
     series = models.ManyToManyField(
         'Series', through='LRecordingSeries')
     tags = models.ManyToManyField(
@@ -3006,7 +3010,7 @@ class Series(models.Model):
     places = models.ManyToManyField(
         'Place', through='LPlaceSeries')
     series = models.ManyToManyField(
-        'Series', through='LSeriesSeries')
+        'Series', related_name='left_series_set', through='LSeriesSeries')
     urls = models.ManyToManyField(
         'Url', through='LSeriesUrl')
     works = models.ManyToManyField(
@@ -3188,7 +3192,8 @@ class Url(models.Model):
     last_updated = models.DateTimeField(blank=True, null=True)
 
     edits = models.ManyToManyField('Edit', through='EditUrl')
-    urls = models.ManyToManyField('Url', through='LUrlUrl')
+    urls = models.ManyToManyField('Url',
+        related_name='left_url_set', through='LUrlUrl')
 
     class Meta:
         managed = False
