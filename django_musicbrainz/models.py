@@ -615,9 +615,11 @@ class Editor(models.Model):
     deleted = models.BooleanField()
 
     artists_subscribed = models.ManyToManyField(
-        'Artist', related_name='editor_subscribed_set', through='EditorSubscribeArtist')
+        'Artist', related_name='editor_subscribed_set',
+        through='EditorSubscribeArtist')
     artists_watched = models.ManyToManyField(
-        'Artist',related_name='editor_watched_set' through='EditorWatchArtist')
+        'Artist', related_name='editor_watched_set',
+        through='EditorWatchArtist')
     artists_deleted = models.ManyToManyField(
         'ArtistDeletion', through='EditorSubscribeArtistDeleted')
     labels_deleted = models.ManyToManyField(
